@@ -17,7 +17,7 @@ class Environment:
         self.placeObstacles()
     
     def placeGoal(self):
-        pygame.draw.rect(self.map, (0, 255, 0), self.goal_box)
+        pygame.draw.rect(self.map, (100, 255, 100), self.goal_box)
     
     def createObstacle(self, origin:tuple, size:tuple):
         obstacle = pygame.Rect(origin, size)
