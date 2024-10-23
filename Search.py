@@ -1,4 +1,5 @@
 from DelieveryBot import *
+from PoliceCar import *
 from Environment import *
 import numpy as np
 from queue import PriorityQueue
@@ -15,7 +16,7 @@ class State:
         self.cost = 100000
         
     def __str__(self):
-        return f"Position: {self.x}, {self.y} Cost: {self.cost}"
+        return f"Position: {self.x}, {self.y} V: {self.v} Steering Angle: {np.rad2deg(self.steering_angle)}"
     
     def __eq__(self, value):
         if not isinstance(value, State):
@@ -30,8 +31,8 @@ class Search:
         self.start = State((robot.x, robot.y), robot.theta, robot.v, robot.steering_angle)
         self.goal = goal
         self.max_count = 6000
-        self.dt = 0.125
-        self.grid_size = 1  # Pixels
+        self.dt = 0.75
+        self.grid_size = 0.1  # Pixels
         
     def search(self, debug=False):
         self.search_queue.put((0, self.start))
@@ -100,30 +101,22 @@ class Search:
     
     def checkGoal(self, state: State):
         # return self.heuristic(state) <= self.grid_size
-        return self.heuristic(state) <= 3
+        return self.heuristic(state) <= 2
     
     def actions(self):
         steering_angles = [
-            np.deg2rad(-20),
-            np.deg2rad(-10),
-            np.deg2rad(-8),
-            np.deg2rad(-6),
             np.deg2rad(-4),
             np.deg2rad(-2),
             np.deg2rad(0),
             np.deg2rad(2),
             np.deg2rad(4),
-            np.deg2rad(6),
-            np.deg2rad(8),
-            np.deg2rad(10),
-            np.deg2rad(20),
         ]
         velocities = [
             -self.robot.v,
-            -self.robot.v/2,
-            -self.robot.v/4,
-            self.robot.v/4,
-            self.robot.v/2,
+            # -self.robot.v/2,
+            # -self.robot.v/4,
+            # self.robot.v/4,
+            # self.robot.v/2,
             self.robot.v,
         ]
         action_list = list()
@@ -137,19 +130,19 @@ class Search:
         x, y, theta, v, omega = self.robot.kinematics(self.dt, action[0], action[1], state.x, state.y, state.theta)
         return State((x,y), theta, v, omega, steering_angle=action[1], parent=state)
 
-    def calculateCost(self, prev_state: State, new_state: State):
-        # We want to avoid turning, so increase the cost if the wheel velocities are different.
-        distance_cost = self.heuristic(new_state)
-        control_effort_cost = abs(new_state.v - prev_state.v) + abs(new_state.theta - prev_state.theta)
-        # turning_cost = 0.1 * abs(new_state.omega)
-        return distance_cost + control_effort_cost
+    # def calculateCost(self, prev_state: State, new_state: State):
+    #     # We want to avoid turning, so increase the cost if the wheel velocities are different.
+    #     distance_cost = self.heuristic(new_state)
+    #     # control_effort_cost = abs(new_state.v - prev_state.v) + abs(new_state.theta - prev_state.theta)
+    #     # control_effort_cost = 0
+    #     return distance_cost
     
     def heuristic(self, state: State):
         distance = np.sqrt((self.goal.y - state.y)**2 + (self.goal.x - state.x)**2)
         return distance
     
 # test_state = State((327.8852215982061, 279.2285151716902), 1.3710944427754277, 100, 0.35265396141693, -0.17453292519943295)
-# test_bot = DelieveryBot((50, 50))
+# test_bot = PoliceCar((50, 50))
 # test_environment = Environment((1000, 1000), 'test', None)
 # test_search = Search(test_bot, test_state, test_environment)
 

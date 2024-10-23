@@ -1,5 +1,5 @@
 import pygame
-from DelieveryBot import *
+# from DelieveryBot import *
 
 class Environment:
     def __init__(self, dims: tuple, name: str, goal: pygame.rect):
@@ -42,29 +42,6 @@ class Environment:
     
     def highlightPixel(self, pixel: tuple):
         self.map.set_at((pixel), (0, 0, 255))
-    
-    # def isPixelFree(self, pixel:tuple):
-    #     for obstacle in self.obstacles:
-    #         if obstacle.collidepoint(pixel):
-    #             return True
-    #     return False
-    
-    # def getNeighbors(self, pixel:tuple):
-    #     neighbors = [
-    #         (pixel[0] + 1, pixel[1]),
-    #         (pixel[0] - 1, pixel[1]),
-    #         (pixel[0], pixel[1] + 1),
-    #         (pixel[0], pixel[1] - 1),
-    #         (pixel[0] + 1, pixel[1] + 1),
-    #         (pixel[0] + 1, pixel[1] - 1),
-    #         (pixel[0] - 1, pixel[1] + 1),
-    #         (pixel[0] - 1, pixel[1] - 1),
-    #     ]
-    #     free_neighbors = []
-    #     for neighbor in neighbors:
-    #         if self.isPixelFree(neighbor):
-    #             free_neighbors.append(neighbor)
-    #     return free_neighbors
                 
     
     

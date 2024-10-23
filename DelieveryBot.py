@@ -18,15 +18,16 @@ class DelieveryBot(Robot):
         self.img = pygame.transform.rotozoom(image, -90, 1)
         self.rotated = self.img
         self.rect = self.rotated.get_rect(center=(self.x, self.y))
+        self.L = 100  # Wheelbase in meters
     
-    def draw(self, map):
-        map.blit(self.rotated, self.rect)
+    # def draw(self, map):
+    #     map.blit(self.rotated, self.rect)
         
-    def checkCollision(self, environment: Environment, position, angle):
-        hitbox_rect = pygame.transform.rotozoom(self.img, np.rad2deg(angle), 1).get_rect(center=(position[0], position[1]))
-        # We want to check if the center of the robot is off the screen.
-        is_robot_off_screen = position[0] < 0 or position[0] > environment.width or position[1] < 0 or position[1] > environment.height
-        return environment.checkCollision(hitbox_rect) or is_robot_off_screen
+    # def checkCollision(self, environment: Environment, position, angle):
+    #     hitbox_rect = pygame.transform.rotozoom(self.img, np.rad2deg(angle), 1).get_rect(center=(position[0], position[1]))
+    #     # We want to check if the center of the robot is off the screen.
+    #     is_robot_off_screen = position[0] < 0 or position[0] > environment.width or position[1] < 0 or position[1] > environment.height
+    #     return environment.checkCollision(hitbox_rect) or is_robot_off_screen
     
     def step(self, dt):
         vl, vr = self.controls(self.v, self.steering_angle)
@@ -34,25 +35,7 @@ class DelieveryBot(Robot):
         
         self.rotated = pygame.transform.rotozoom(self.img, np.rad2deg(-self.theta), 1)
         self.rect = self.rotated.get_rect(center=(self.x, self.y))
-        
-    def goTo(self, pose):
-        robot_pose = np.array([self.x, self.y])
-        reference_pose = np.array([pose[0], pose[1]])
-        pose_error = reference_pose - robot_pose
 
-        robot_angle_vector = Utils.calculateUnitVector(self.theta)
-        reference_angle = Utils.calculateAngle(robot_angle_vector, pose_error)
-        
-        if np.abs(reference_angle) > np.deg2rad(1):
-            vl_unclamped = 5 * reference_angle
-            vr_unclamped = -5 * reference_angle
-        else:
-            vl_unclamped = (10 * np.linalg.norm(pose_error)) + 5 * reference_angle
-            vr_unclamped = (10 * np.linalg.norm(pose_error)) - 5 * reference_angle
-        
-        self.vl = Utils.clamp(vl_unclamped, -self.max_v, self.max_v)
-        self.vr = Utils.clamp(vr_unclamped, -self.max_v, self.max_v)
-        
     def kinematics(self, dt, v, steering_angle, x, y, theta):
         vl, vr = self.controls(v, steering_angle)
         return self.odom(dt, vl, vr, x, y, theta)
