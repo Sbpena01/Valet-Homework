@@ -1,11 +1,11 @@
 import pygame
 import copy
-from DelieveryBot import *
+from DeliveryBot import *
 from Environment import *
-from Search import *
+from DeliveryBotSearch import *
 
 start = (50, 50)
-bot = DelieveryBot(start)
+bot = DeliveryBot(start)
 screen_dims = (700, 1400)
 
 goal = pygame.Rect((500, 550), (300, 100))
@@ -17,7 +17,7 @@ environment.createObstacle((900, 550), (300, 100))
 environment.createObstacle((500, 100), (300, 300))
 
 goal_state = State(environment.goal_coord, 0, 0.0, 0.0)
-search = Search(bot, goal_state, environment)
+search = DeliveryBotSearch(bot, goal_state, environment)
 environment.map.fill((50, 50, 50))
 environment.placeAreasOfInterest()
 

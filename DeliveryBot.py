@@ -5,8 +5,8 @@ from Robot import Robot
 import Utils
 from Environment import *
 
-class DelieveryBot(Robot):
-    def __init__(self, start):
+class DeliveryBot(Robot):
+    def __init__(self, start, width = 1.5):
         super().__init__(start)
         
         # Graphics
@@ -18,16 +18,16 @@ class DelieveryBot(Robot):
         self.img = pygame.transform.rotozoom(image, -90, 1)
         self.rotated = self.img
         self.rect = self.rotated.get_rect(center=(self.x, self.y))
-        self.L = 100  # Wheelbase in meters
+        self.R = 1  # Distance between wheels along axle in meters
+        self.L = width # Wheelbase in meters
+        self.v = 10
+        self.v_max = 20
     
-    # def draw(self, map):
-    #     map.blit(self.rotated, self.rect)
-        
-    # def checkCollision(self, environment: Environment, position, angle):
-    #     hitbox_rect = pygame.transform.rotozoom(self.img, np.rad2deg(angle), 1).get_rect(center=(position[0], position[1]))
-    #     # We want to check if the center of the robot is off the screen.
-    #     is_robot_off_screen = position[0] < 0 or position[0] > environment.width or position[1] < 0 or position[1] > environment.height
-    #     return environment.checkCollision(hitbox_rect) or is_robot_off_screen
+    def checkCollision(self, environment: Environment, position, angle):
+        hitbox_rect = pygame.transform.rotozoom(self.img, np.rad2deg(angle), 1).get_rect(center=(position[0], position[1]))
+        # We want to check if the center of the robot is off the screen.
+        is_robot_off_screen = position[0] < 0 or position[0] > environment.width or position[1] < 0 or position[1] > environment.height
+        return environment.checkCollision(hitbox_rect) or is_robot_off_screen
     
     def step(self, dt):
         vl, vr = self.controls(self.v, self.steering_angle)

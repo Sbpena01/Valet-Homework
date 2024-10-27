@@ -6,6 +6,7 @@ class Robot:
         self.v = 20.0  # Linear velocity
         self.omega = 0.0  # Angular velocity
         self.steering_angle = 0.0   # Steering angle of robot
+        self.m2p = 30
 
         # Mainly used for Delievery Bot
         self.vl = 0.0  # Velocity of left wheel

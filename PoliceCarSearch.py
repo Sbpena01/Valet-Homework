@@ -5,7 +5,7 @@ class PoliceCarSearch(Search):
     def __init__(self, robot: PoliceCar, goal, environment):
         super().__init__(robot, goal, environment)
         self.robot = robot
-        self.dt = 0.1
+        self.dt = 0.08
 
     def search(self, debug=False):
         self.search_queue.put((0, self.start))
@@ -14,7 +14,6 @@ class PoliceCarSearch(Search):
         visited_states = list()
         while not self.search_queue.empty() and count < self.max_count:
             _, current_state = self.search_queue.get()
-            print()
             if self.checkGoal(current_state):
                 print("Found a path!")
                 if debug:
@@ -41,7 +40,7 @@ class PoliceCarSearch(Search):
 
                 visited_states.append(result)
                 visited.add(grid_position)
-                print(result)
+
                 if debug:
                     self.displayVisited((result.x.astype(int), result.y.astype(int)))
                     # print(result.steering_angle, result.v)
@@ -64,7 +63,7 @@ class PoliceCarSearch(Search):
         ]
         velocities = [
             -self.robot.v,
-            self.robot.v,
+            self.robot.v
         ]
         action_list = list()
         for omega in omegas:

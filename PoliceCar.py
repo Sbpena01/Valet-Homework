@@ -12,11 +12,12 @@ class PoliceCar(Robot):
         self.rotated = self.img
         self.rect = self.rotated.get_rect(center=(self.x, self.y))
         self.v = 50
-        self.L = 2.8  # Meters
+        self.L = 3.0  # Meters
+        self.max_zeta = np.deg2rad(10)
     
     def kinematics(self, initial_states: tuple[float], dt, v, omega):
         init_x, init_y, init_theta, init_zeta = initial_states
-        zeta_prime = Utils.clamp(init_zeta + (dt * omega), np.deg2rad(-20), np.deg2rad(20))
+        zeta_prime = Utils.clamp(init_zeta + (dt * omega), -self.max_zeta, self.max_zeta)
         theta_prime = init_theta + (dt * (v * (np.tan(zeta_prime) / self.L)))
         x_prime = init_x + (dt * (v*np.cos(theta_prime)))
         y_prime = init_y + (dt * (v*np.sin(theta_prime)))

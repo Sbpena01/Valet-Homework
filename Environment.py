@@ -1,4 +1,5 @@
 import pygame
+from Robot import *
 # from DelieveryBot import *
 
 class Environment:
@@ -11,6 +12,8 @@ class Environment:
         self.obstacles = []
         self.goal_box = goal
         self.goal_coord = goal.center
+
+        self.m2p = 10  # 1 meter is 10 pixels
         
     def placeAreasOfInterest(self):
         self.placeGoal()
@@ -31,7 +34,17 @@ class Environment:
     def checkCollision(self, rectangle: pygame.Rect):
         return rectangle.collidelist(self.obstacles) != -1
     
-    def drawPath(self, path: list):
+    def drawTrailerPath(self, path):
+        if len(path) == 0:
+            return None
+        last = path.pop()
+        while len(path) != 0:
+            next = path.pop()
+            pygame.draw.line(self.map, (255, 0, 255), (int(last.car_x), int(last.car_y)), (int(next.car_x), int(next.car_y)), width=2)
+            pygame.draw.line(self.map, (255, 255, 0), (int(last.trailer_x), int(last.trailer_y)), (int(next.trailer_x), int(next.trailer_y)), width=2)
+            last = next
+
+    def drawPath(self, path):
         if len(path) == 0:
             return None
         last = path.pop()
