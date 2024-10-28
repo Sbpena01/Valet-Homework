@@ -25,7 +25,7 @@ class PoliceCarSearch(Search):
                 return self.getPath(current_state)
             
             # Create the list of control inputs
-            actions = self.actions(current_state)
+            actions = self.actions()
             
             # Loop through each pair of control inputs and create states
             # based on the results of the kinematic equations
