@@ -1,5 +1,4 @@
 import pygame
-import copy
 from DeliveryBot import *
 from Environment import *
 from DeliveryBotSearch import *
@@ -36,7 +35,6 @@ if path is None:
     exit()
 path_node = path.pop(0) # First element
 last_time = pygame.time.get_ticks()
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -47,8 +45,6 @@ while running:
     dt = clock.tick(30) / 1000.0  # Convert milliseconds to seconds
     environment.map.fill((50, 50, 50))
     environment.placeAreasOfInterest()
-    # pygame.draw.rect(environment.map, pygame.Color(255, 0, 255, a=100), bot.rect)
-    
     bot.draw(environment.map)
     environment.drawPath(path.copy())
     current_time = pygame.time.get_ticks()

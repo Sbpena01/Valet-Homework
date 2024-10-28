@@ -1,5 +1,4 @@
 import pygame
-import time
 from TrailerBot import *
 from Environment import *
 from TrailerBotSearch import *
@@ -38,7 +37,6 @@ if path is None:
     exit()
 path_node = path.pop(0) # First element
 last_time = pygame.time.get_ticks()
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,6 +50,7 @@ while running:
     # pygame.draw.rect(environment.map, pygame.Color(255, 0, 255, a=100), bot.rect)
     
     environment.drawTrailerPath(path.copy())
+    bot.draw(environment.map)
     current_time = pygame.time.get_ticks()
     if current_time - last_time >= dt*100:
         path_node = path.pop(0)
@@ -63,10 +62,6 @@ while running:
     bot.trailer_y = path_node.trailer_y
     bot.trailer_phi = path_node.trailer_phi
 
-    bot.v = 100
-    bot.omega = np.deg2rad(2)
-    dt = 0.02
-    bot.new_step(dt)
 
     pygame.draw.circle(environment.map, (255, 0, 255), (goal_state.x, goal_state.y), 4)
     unit_vector = Utils.calculateUnitVector(bot.theta)

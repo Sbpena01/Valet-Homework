@@ -1,5 +1,4 @@
 import pygame
-import copy
 from PoliceCar import *
 from Environment import *
 from PoliceCarSearch import *
@@ -36,7 +35,6 @@ if path is None:
     exit()
 path_node = path.pop(0) # First element
 last_time = pygame.time.get_ticks()
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -49,7 +47,7 @@ while running:
     environment.placeAreasOfInterest()
     # pygame.draw.rect(environment.map, pygame.Color(255, 0, 255, a=100), bot.rect)
     
-    # bot.draw(environment.map)
+    bot.draw(environment.map)
     environment.drawPath(path.copy())
     current_time = pygame.time.get_ticks()
     if current_time - last_time >= dt:
@@ -58,11 +56,6 @@ while running:
     bot.x = path_node.x
     bot.y = path_node.y
     bot.theta = path_node.theta
-    # # bot.vl = path_node.vl
-    # # bot.vr = path_node.vr
-    # bot.omega = np.deg2rad(30)
-    # bot.v = 100
-    # bot.step(dt)
 
     pygame.draw.circle(environment.map, (255, 0, 255), (goal_state.x, goal_state.y), 4)
     unit_vector = Utils.calculateUnitVector(bot.theta)

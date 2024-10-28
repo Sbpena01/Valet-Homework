@@ -8,18 +8,27 @@ class PoliceCarSearch(Search):
         self.dt = 0.08
 
     def search(self, debug=False):
+        # Initializes the variables and begins the search by adding the starting node to the
+        # priority queue
         self.search_queue.put((0, self.start))
         count = 0
         visited = set()
         visited_states = list()
         while not self.search_queue.empty() and count < self.max_count:
-            _, current_state = self.search_queue.get()
+            _, current_state = self.search_queue.get()  # Gets the state with the lowest cost
+            
+            # Before attempting to search, check if the current state is the goal state.
             if self.checkGoal(current_state):
                 print("Found a path!")
                 if debug:
                     return visited_states
                 return self.getPath(current_state)
-            actions = self.actions()
+            
+            # Create the list of control inputs
+            actions = self.actions(current_state)
+            
+            # Loop through each pair of control inputs and create states
+            # based on the results of the kinematic equations
             for action in actions:
                 result = self.results(current_state, action)
                 grid_position = (
@@ -27,23 +36,27 @@ class PoliceCarSearch(Search):
                     int(result.y * 10)
                 )
 
+                # We want to ensure that the state does not collide with an obstacle
+                # and reaches a unique grid cell.
                 if self.robot.checkCollision(self.map, (result.x, result.y), result.theta):
                     continue
                 if grid_position in visited:
                     continue
                 result.cost = self.calculateCost(current_state, result)
+                
                 try:
                     self.search_queue.put((result.cost, result))
+                    
+                # If two states have equal costs, only have one in the queue.
                 except TypeError as e:
                     print("Two nodes with the same cost.")
                     continue
 
                 visited_states.append(result)
                 visited.add(grid_position)
-
+                count += 1
                 if debug:
                     self.displayVisited((result.x.astype(int), result.y.astype(int)))
-                    # print(result.steering_angle, result.v)
         
         if(count >= self.max_count):
             print("Max Count Exceeded")
@@ -86,7 +99,6 @@ class PoliceCarSearch(Search):
     def calculateCost(self, prev_state: State, new_state: State):
         distance_cost = self.heuristic(new_state)
         control_effort_cost = abs(new_state.v - prev_state.v)
-        # control_effort_cost = 0
         return distance_cost + control_effort_cost
     
 

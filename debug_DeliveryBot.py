@@ -46,11 +46,7 @@ while running:
         continue
     dt = clock.tick(60) / 1000.0  # Convert milliseconds to seconds
     environment.map.set_at((int(path_node.x), int(path_node.y)), (255, 255, 255))
-    
-    # bot.v = 50
-    # bot.steering_angle = np.deg2rad(-10)
-    # bot.step(dt)
-    # print(bot.theta)
+
 
     current_time = pygame.time.get_ticks()
     if current_time - last_time >= 20:
